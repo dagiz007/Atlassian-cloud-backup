@@ -23,7 +23,8 @@ SETTINGS = {
     'confluence_sites': ['xxx', 'yyy'],
     'jira_sites': ['xxx', 'yyy'],
     'backup_path': r'c:\temp', 
-    'slack_webhook': ''
+    'slack_webhook': '',
+    'number_of_files_to_keep': 10
 }
 ```
 

@@ -6,15 +6,24 @@ from datetime import datetime
 from tqdm import tqdm
 import requests
 import logging
+import os
+import glob
 
 def setup_logging():
     logging.basicConfig(
         format='%(asctime)s %(levelname)-8s %(message)s', 
         filename='logs\\audit.log', 
         datefmt='%Y-%m-%d %H:%M:%S',
-        level=logging.INFO)   
+        level=logging.INFO)
 
-def download_backup(wait, element_id, save_path, auth):   
+def delete_old_files(path, number_of_files_to_keep):
+    files = glob.glob(path + '\*.zip')
+    files.sort(reverse=True)
+    if len(files) > number_of_files_to_keep:
+        for file in files[number_of_files_to_keep:]:
+            os.remove(file)   
+
+def download_backup(wait, element_id, filename, auth):   
     backup_link = find_element(wait, By.ID, element_id).find_element(By.XPATH, ".//a").get_attribute("href")
     logging.info(f"Backup link: {backup_link}")
     response = requests.get(backup_link, auth=auth, stream=True)
@@ -22,12 +31,12 @@ def download_backup(wait, element_id, save_path, auth):
         total_size = int(response.headers.get('content-length', 0))
         block_size = 1024
         try:
-            with open(save_path, 'wb') as f, tqdm(total=total_size, unit='B', unit_scale=True) as pbar:
+            with open(filename, 'wb') as f, tqdm(total=total_size, unit='B', unit_scale=True) as pbar:
                 for data in response.iter_content(block_size):
                     f.write(data)
                     pbar.update(len(data))
         except Exception as e:
-            logging.error(f"Failed to save backup {save_path}: {e}")
+            logging.error(f"Failed to save backup {filename}: {e}")
 
 def find_element(wait, locator_type, element_id):
     try:
