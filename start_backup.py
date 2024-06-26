@@ -4,8 +4,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from utils import login, click_element, send_slack_message
 
 def main_start(settings):         
-    driver = webdriver.Edge(service=Service(settings['webdriver_path'] + '\msedgedriver.exe'))
-    wait = WebDriverWait(driver, 10)
+    try: 
+        driver = webdriver.Edge(service=Service(settings['webdriver_path'] + '\msedgedriver.exe'))
+        wait = WebDriverWait(driver, 10)
+    except Exception as e: 
+        send_slack_message(f"Failed to start WebDriver. {e}", settings['slack_webhook'])
 
     def process_sites(sites, url_suffix, element_id, product):
         for site in sites:
