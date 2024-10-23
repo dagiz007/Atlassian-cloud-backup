@@ -1,14 +1,18 @@
-from selenium import webdriver
-from selenium.webdriver.edge.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
-from utils import login, click_element, send_slack_message
+from msedge.selenium_tools import Edge, EdgeOptions
+from webdriver_manager.microsoft import EdgeChromiumDriverManager
+from utils import login, download_backup, delete_old_files, today, send_slack_message
 
 def main_start(settings):         
     try: 
-        driver = webdriver.Edge(service=Service(settings['webdriver_path'] + '\msedgedriver.exe'))
+        options = EdgeOptions()
+        options.use_chromium = True
+        driver = Edge(executable_path=EdgeChromiumDriverManager().install(), options=options)
         wait = WebDriverWait(driver, 10)
     except Exception as e: 
-        send_slack_message(f"Failed to start WebDriver. {e}", settings['slack_webhook'])
+        print(f"Failed to start WebDriver. Error: {e}")
+        send_slack_message("Failed to start WebDriver.", settings['slack_webhook'])
+        return
 
     def process_sites(sites, url_suffix, element_id, product):
         for site in sites:

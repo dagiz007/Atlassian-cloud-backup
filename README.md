@@ -10,16 +10,12 @@ The scripts will send a message to a defined Slack channel when finish.
 
 ## Installation
 
-1. Download Edge WebDriver and place it in a folder (you can define the folder in `config.py`).
-   [Edge WebDriver](https://developer.microsoft.com/nb-no/microsoft-edge/tools/webdriver)
-
-2. Create `config.py`:
+Create `config.py`:
 
 ```python
 SETTINGS = {
     'username': '',
     'token': '',
-    'webdriver_path': r'C:\Temp\bin',
     'confluence_sites': ['xxx', 'yyy'],
     'jira_sites': ['xxx', 'yyy'],
     'backup_path': r'c:\temp', 
@@ -33,3 +29,5 @@ SETTINGS = {
 pip install selenium
 pip install tqdm 
 pip install requests
+pip install msedge-selenium-tools
+pip install webdriver-manager
