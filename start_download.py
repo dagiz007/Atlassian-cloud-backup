@@ -1,5 +1,7 @@
 from selenium.webdriver.support.ui import WebDriverWait
-from msedge.selenium_tools import Edge, EdgeOptions
+from selenium.webdriver.edge.service import Service as EdgeService
+from selenium.webdriver.edge.options import Options as EdgeOptions
+from selenium.webdriver.edge.webdriver import WebDriver as Edge
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from utils import login, download_backup, delete_old_files, today, send_slack_message
 
@@ -8,7 +10,8 @@ def main_backup(settings):
     try:
         options = EdgeOptions()
         options.use_chromium = True
-        driver = Edge(executable_path=EdgeChromiumDriverManager().install(), options=options)
+        service = EdgeService(EdgeChromiumDriverManager().install())
+        driver = Edge(service=service, options=options)
         wait = WebDriverWait(driver, 10)
         backup_path = settings['backup_path']
     except Exception as e:

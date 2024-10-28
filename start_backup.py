@@ -1,5 +1,7 @@
 from selenium.webdriver.support.ui import WebDriverWait
-from msedge.selenium_tools import Edge, EdgeOptions
+from selenium.webdriver.edge.service import Service as EdgeService
+from selenium.webdriver.edge.options import Options as EdgeOptions
+from selenium.webdriver.edge.webdriver import WebDriver as Edge
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from utils import login, download_backup, delete_old_files, today, send_slack_message
 
@@ -7,7 +9,8 @@ def main_start(settings):
     try: 
         options = EdgeOptions()
         options.use_chromium = True
-        driver = Edge(executable_path=EdgeChromiumDriverManager().install(), options=options)
+        service = EdgeService(EdgeChromiumDriverManager().install())
+        driver = Edge(service=service, options=options)
         wait = WebDriverWait(driver, 10)
     except Exception as e: 
         print(f"Failed to start WebDriver. Error: {e}")
@@ -29,6 +32,6 @@ def main_start(settings):
     
     driver.quit()
 
-if __name__ == "__main__":
+if __name__ == "__main__": 
     import config
     main_start(config.SETTINGS)
