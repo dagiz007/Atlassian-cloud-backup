@@ -69,9 +69,10 @@ def today():
     return datetime.now().strftime('%y%m%d')
 
 def send_slack_message(message, webhook):
-    response = requests.post(webhook, json={'text': message}, verify=False)
-    if response.status_code != 200:
-        logging.error(f"Failed to send slack message: {response.text}")
+    if webhook:
+        response = requests.post(webhook, json={'text': message}, verify=False)
+        if response.status_code != 200:
+            logging.error(f"Failed to send slack message: {response.text}")
 
 is_logged_in = False
 setup_logging()

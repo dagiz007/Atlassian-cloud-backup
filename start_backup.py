@@ -3,7 +3,7 @@ from selenium.webdriver.edge.service import Service as EdgeService
 from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.webdriver.edge.webdriver import WebDriver as Edge
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
-from utils import login, send_slack_message
+from utils import login, click_element, send_slack_message
 
 def main_start(settings):         
     try: 
@@ -24,7 +24,7 @@ def main_start(settings):
             try:
                 click_element(wait, element_id)
                 send_slack_message(f"Backup for {product} - {site} started", settings['slack_webhook'])
-            except:
+            except Exception as e: 
                 print(f"Failed to start backup for {product} - {site}. Error: {e}")
                 send_slack_message(f"Failed to start backup for {product} - {site}", settings['slack_webhook'])
     
