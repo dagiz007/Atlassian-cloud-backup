@@ -26,8 +26,8 @@ SETTINGS = {
 
 ## Required libarys
 
-pip install selenium
+pip install selenium 
 pip install tqdm 
-pip install requests
-pip install msedge-selenium-tools
-pip install webdriver-manager
+pip install requests 
+pip install msedge-selenium-tools 
+pip install webdriver-manager 
