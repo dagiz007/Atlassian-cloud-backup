@@ -8,6 +8,9 @@ import requests
 import logging
 import os
 import glob
+import uuid
+
+from config import SETTINGS
 
 def setup_logging():
     logging.basicConfig(
@@ -68,11 +71,49 @@ def login(wait, username):
 def today():
     return datetime.now().strftime('%y%m%d')
 
-def send_slack_message(message, webhook):
-    if webhook:
-        response = requests.post(webhook, json={'text': message}, verify=False)
-        if response.status_code != 200:
-            logging.error(f"Failed to send slack message: {response.text}")
+def send_slack_message(message):
+    response = requests.post(SETTINGS['SLACK_WEBHOOK'], json={'text': message}, verify=False)
+    if response.status_code != 200:
+        logging.error(f"Failed to send slack message: {response.text}")
 
+def send_opsgenie_hartbeat_ping(heartbeat):
+    url = SETTINGS['OPSGENIE_URL'] + "heartbeats/" + heartbeat + "/ping"
+    headers = {"Authorization": f"GenieKey {SETTINGS['OPSGENIE_API_KEY']}"}
+    response = requests.post(url, headers=headers)
+    if response.status_code == 202:
+        logging.info(f"OpsGenie heartbeat ping sent successfully")
+    else:
+        logging.error(f"Failed to send OpsGenie heartbeat ping: {response.text}")
+        
+        
+
+def create_opsgenie_alarm(message, description):
+    url = SETTINGS['OPSGENIE_URL'] + "alerts"
+    
+    headers = {
+    "Content-Type": "application/json",
+    "Authorization": f"GenieKey {SETTINGS['OPSGENIE_API_KEY']}"
+    }
+    
+    data = {
+        "message": message,
+        "alias": "atlassian-backup-" + uuid.uuid4().hex,
+        "description": description,
+        "responders": [
+            {
+                "type": "team",
+                "name": "fremtind-team-atlassian"
+            }
+        ],
+        "priority": "P2"
+    }
+
+    response = requests.post(url, headers=headers, json=data)
+    if response.status_code == 202:
+        logging.info(f"OpsGenie alarm sent successfully: {data}")
+    else:
+        logging.error(f"Failed to send OpsGenie alarm: {response.text}")
+        
+    
 is_logged_in = False
 setup_logging()
