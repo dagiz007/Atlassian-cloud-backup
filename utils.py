@@ -40,6 +40,7 @@ def download_backup(wait, element_id, filename, auth):
                     pbar.update(len(data))
         except Exception as e:
             logging.error(f"Failed to save backup {filename}: {e}")
+            raise
 
 def find_element(wait, locator_type, element_id):
     try:
