@@ -18,9 +18,9 @@ def main_start(settings):
 
     def process_sites(sites, url_suffix, element_id, product):
         for site in sites:
-            driver.get(f"https://{site}.atlassian.net/{url_suffix}")
-            login(wait, SETTINGS['USERNAME'])
-            try:
+            try: 
+                driver.get(f"https://{site}.atlassian.net/{url_suffix}")
+                login(wait, SETTINGS['USERNAME'])
                 click_element(wait, element_id)
                 send_opsgenie_hartbeat_ping(SETTINGS['HEARTBEAT'])
             except Exception as e: 
@@ -33,4 +33,5 @@ def main_start(settings):
 
 if __name__ == "__main__": 
     import config
-    main_start(config.SETTINGS)
+    #main_start(config.SETTINGS)
+    send_opsgenie_hartbeat_ping(config.SETTINGS['HEARTBEAT'])

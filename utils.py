@@ -80,7 +80,7 @@ def send_slack_message(message):
 def send_opsgenie_hartbeat_ping(heartbeat):
     url = SETTINGS['OPSGENIE_URL'] + "heartbeats/" + heartbeat + "/ping"
     headers = {"Authorization": f"GenieKey {SETTINGS['OPSGENIE_API_KEY']}"}
-    response = requests.post(url, headers=headers)
+    response = requests.post(url, headers=headers, verify=False)
     if response.status_code == 202:
         logging.info(f"OpsGenie heartbeat ping sent successfully")
     else:

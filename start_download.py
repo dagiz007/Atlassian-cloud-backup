@@ -21,10 +21,11 @@ def main_backup(SETTINGS):
 
     def process_sites(sites, url_suffix, element_id, product):
         for site in sites:
-            driver.get(f"https://{site}.atlassian.net/{url_suffix}")
-            login(wait, SETTINGS['USERNAME'])
-            filename = f"{backup_path}\{today()}_{site}_{product}.zip"
             try:
+                driver.get(f"https://{site}.atlassian.net/{url_suffix}")
+                login(wait, SETTINGS['USERNAME'])
+                filename = f"{backup_path}\{today()}_{site}_{product}.zip"
+            
                 delete_old_files(backup_path, SETTINGS['NUMBER_OF_FILES_TO_KEEP'])
                 download_backup(wait, element_id, filename, auth)
                 send_opsgenie_hartbeat_ping(SETTINGS['HEARTBEAT'])
