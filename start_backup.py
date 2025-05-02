@@ -22,6 +22,7 @@ def main_start(settings):
                 driver.get(f"https://{site}.atlassian.net/{url_suffix}")
                 login(wait, SETTINGS['USERNAME'])
                 click_element(wait, element_id)
+                log_info(f"Starting backup for {product} - {site}.")
                 send_opsgenie_hartbeat_ping(SETTINGS['HEARTBEAT'])
             except Exception as e: 
                 create_opsgenie_alarm(f"Failed to start backup {product} - {site}", e)
@@ -33,5 +34,5 @@ def main_start(settings):
 
 if __name__ == "__main__": 
     import config
-    #main_start(config.SETTINGS)
-    send_opsgenie_hartbeat_ping(config.SETTINGS['HEARTBEAT'])
+    main_start(config.SETTINGS)
+    
